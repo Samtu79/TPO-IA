@@ -1,0 +1,7 @@
+# Configuración de Streamlit para que funcione sin internet.
+[browser]
+gatherUsageStats = false   # no intenta mandar estadísticas de uso
+
+[theme]
+base = "dark"
+primaryColor = "#3d8bff"

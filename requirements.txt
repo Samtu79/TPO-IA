@@ -1,0 +1,11 @@
+# Dependencias del proyecto (probado con Python 3.13; sirve de 3.10 a 3.13).
+# Para una instalación más liviana de torch (sin GPU), ver README.md.
+torch>=2.2
+stable-baselines3>=2.3
+gymnasium>=0.29
+numpy>=1.26
+pandas>=2.0
+matplotlib>=3.8
+streamlit>=1.40
+imageio>=2.34
+pytest>=8.0

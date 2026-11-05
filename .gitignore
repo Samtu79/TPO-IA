@@ -1,0 +1,11 @@
+# Archivos que genera Python solo
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Copias intermedias del entrenamiento (pesan y se regeneran)
+models/checkpoints/
