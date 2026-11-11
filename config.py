@@ -77,7 +77,7 @@ DISTANCIA_SACK = 1.2          # si un defensor llega a esta distancia del QB ant
 
 # Recepción: probabilidad base según la distancia del pase y la separación del defensor
 COMPLETO_BASE = 0.85          # pase corto sin nadie cerca
-COMPLETO_CAIDA_POR_YARDA = 0.012   # cuánto baja por cada yarda de distancia del pase
+COMPLETO_CAIDA_POR_YARDA = 0.02    # con 0.02 el DT clásico rinde ~1,7 puntos por drive, parecido a la NFL real (~2)
 SEPARACION_LIBRE = 2.0        # a partir de esta separación (yardas) el receptor está "solo"
 COMPLETO_PEGADO = 0.5         # fracción de la probabilidad que queda con el defensor pegado
 INTERCEPCION_MAX = 0.05       # probabilidad de intercepción con el defensor encima
