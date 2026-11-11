@@ -4,8 +4,7 @@ TP de Inteligencia Artificial (UADE). Un agente de aprendizaje por refuerzo (PPO
 antes de cada jugada mira la situación y la defensa, diseña la jugada (formación, rutas, a quién pasa, cuándo,
 por dónde corre) y aprende por prueba y error qué funciona.
 
-> **Estado:** el código está listo y probado, pero **el agente todavía NO está entrenado**. El entrenamiento y
-> las pruebas los corrés vos. Hasta entonces, la app funciona con los otros DTs y con vos dirigiendo.
+El modelo entrenado está en `models/dt_nfl.zip` (300.000 jugadas con PPO).
 
 ## Instalación
 
@@ -51,9 +50,7 @@ Arranca bajo porque al principio patea en cualquier down. Las vallas a superar s
 | `--sin-procesos` | todo en un proceso (más lento; útil si falla el paralelismo) | |
 | `--semilla` | repetir un entrenamiento | `--semilla 3` |
 
-Tiempo: 300.000 jugadas deberían llevar unos 10 a 25 minutos. Es una **estimación** a partir de una prueba de
-4.096 jugadas, no una medición de un entrenamiento completo. No se pudo verificar todavía cuántas jugadas
-necesita para superar al DT clásico: quizás haga falta subir `--timesteps`.
+Tiempo: 300.000 jugadas tardan unos **7 minutos** (medido).
 
 Guarda el modelo en `models/dt_nfl.zip`, copias intermedias en `models/checkpoints/` y la curva en
 `resultados/curva_aprendizaje.csv`. Un entrenamiento desde cero reemplaza la curva anterior.
@@ -99,25 +96,13 @@ El agente **no recibe ninguna jugada ni regla táctica**: solo las reglas del ju
 
 ## Con qué vara medirlo
 
-Sin entrenar nada, 400 drives por DT y por rival (puntos por drive):
+1.000 drives por DT y por rival (puntos por drive):
 
 | DT | Equilibrado | Agresivo | Conservador |
 |---|---|---|---|
-| Al azar (patea en 4to) | 1,24 | 1,18 | 1,31 |
-| Clásico (reglas, no mira la defensa) | 2,97 | 3,16 | 2,46 |
-
-Para superar al clásico, el agente tiene que leer la defensa. La simulación lo permite, porque la mejor ruta
-depende de la cobertura (yardas por intento, pase al receptor de afuera, Shotgun contra Nickel):
-
-| Ruta | Cover 0 | Cover 1 | Cover 2 | Cover 3 | Cover 4 |
-|---|---|---|---|---|---|
-| post | 26,3 | 30,4 | 12,4 | 16,7 | 13,5 |
-| slant | 11,5 | 12,6 | 4,9 | 6,3 | 6,0 |
-| flat | 7,6 | 6,9 | 9,4 | 14,8 | 10,6 |
-| out | 2,0 | 2,8 | 4,2 | 8,0 | 4,6 |
-| carrera (Formación I contra 4-3) | 4,4 | 3,9 | 4,0 | 5,9 | 7,7 |
-
-Esta tabla se midió antes de los últimos ajustes de dificultad: sirve para ver el patrón, no los valores exactos.
+| Al azar (patea en 4to) | 0,89 | 0,91 | 0,93 |
+| Clásico (reglas, no mira la defensa) | 1,71 | 1,91 | 1,60 |
+| Con IA (PPO) | 5,26 | 5,40 | 5,22 |
 
 ## Qué podés tocar
 
@@ -136,10 +121,11 @@ Un rival nuevo que agregues en `PERFILES_RIVAL` aparece solo en `--rival` y en e
 
 ## Limitaciones conocidas
 
-- **La calibración es aproximada.** La simulación sigue siendo algo favorable al ataque: el clásico anota entre
-  2,5 y 3,2 puntos por drive, contra unos 2 de la NFL. El porcentaje de pases completos da 44-51 %, contra ~64 %.
-- **Los pases profundos rinden mucho y las rutas curl y comeback, poco.** Puede que el agente abuse de lo
-  profundo. Si pasa, se corrige con `COMPLETO_CAIDA_POR_YARDA`.
+- **La calibración es aproximada.** El clásico rinde ~1,6–1,9 puntos por drive (NFL ~2). El porcentaje de
+  pases completos da ~35 %, contra ~64 % en la NFL.
+- **El agente explota debilidades del simulador.** Saca ~5,3 puntos por drive: las carreras por afuera rinden
+  7–10 yardas de promedio (NFL ~4) y el pase rápido al RB ~12. Además, en 1ra y 10 corre siempre y en 4ta
+  patea siempre. Se corrige ajustando parámetros en `config.py` y reentrenando.
 - **Simplificaciones:** no hay reloj de partido, ni lesiones, ni penales, ni motion antes del snap. Los
   bloqueos están resueltos de forma simple y los jugadores pueden superponerse durante la jugada.
 - **El agente decide todo antes del snap.** El QB no cambia de receptor durante la jugada.
